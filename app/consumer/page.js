@@ -7,6 +7,7 @@ export default function ConsumerPage() {
   const [lat, setLat] = useState(null);
   const [lon, setLon] = useState(null);
   const [status, setStatus] = useState("");
+  const [isloader,setisloader]=useState(false);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -28,6 +29,7 @@ export default function ConsumerPage() {
   };
 
   const handleSubmit = async () => {
+    setisloader(true);
     if (!image || lat === null || lon === null) {
       alert("Please select an image and allow location access.");
       return;
@@ -45,6 +47,7 @@ export default function ConsumerPage() {
     } else {
       setStatus("❌ Submission failed.");
     }
+    setisloader(false);
   };
 
   return (
@@ -61,7 +64,7 @@ export default function ConsumerPage() {
         <p className="text-gray-600 mb-6">Help us keep your city clean by reporting garbage with location and photo evidence.</p>
 
         <div className="bg-white text-black  p-6 rounded-lg shadow-lg w-full max-w-md">
-          <input type="file" accept="image/*" onChange={handleImageChange} className="mb-4 border p-1 rounded cursor-pointer" />
+          <input type="file" accept="image/*" capture='environment' onChange={handleImageChange} className="mb-4 border p-1 rounded cursor-pointer" />
           {image && (
             <div className="mb-4">
               <img src={image} alt="Selected" className="rounded-lg w-full h-60 object-cover" />
@@ -77,7 +80,7 @@ export default function ConsumerPage() {
             onClick={handleSubmit}
             className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition"
           >
-            Submit Report
+            {isloader?<>Loading...</>:<>Submit Report</>}
           </button>
           <p className="mt-4 text-green-800 font-medium">{status}</p>
         </div>

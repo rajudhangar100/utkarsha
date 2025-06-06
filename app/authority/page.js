@@ -18,7 +18,7 @@ export default function AuthorityPage() {
         }
       } catch (err) {
         console.error("Error loading reports:", err);
-        setError("Failed to load reports.");
+        // setError("Failed to load reports.");
         setReports([]); // Safe fallback
       }
     };
