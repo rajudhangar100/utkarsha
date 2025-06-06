@@ -7,9 +7,20 @@ export default function AuthorityPage() {
 
   useEffect(() => {
     const fetchReports = async () => {
-      const res = await fetch("/api/report");
-      const data = await res.json();
-      if (data.success) setReports(data.reports);
+      try {
+        const res = await fetch("/api/report");
+        const data = await res.json();
+        console.log("Fetched Data:", data); // <-- Debug line
+        if (data.success && Array.isArray(data.reports)) {
+          setReports(data.reports);
+        } else {
+          throw new Error("Invalid response format");
+        }
+      } catch (err) {
+        console.error("Error loading reports:", err);
+        setError("Failed to load reports.");
+        setReports([]); // Safe fallback
+      }
     };
     fetchReports();
   }, []);
@@ -30,7 +41,7 @@ export default function AuthorityPage() {
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {reports && reports.map((r) => (
+          {Array.isArray(reports) && reports.map((r) => (
             <div key={r._id} className="bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition duration-200">
               <img
                 src={r.image}

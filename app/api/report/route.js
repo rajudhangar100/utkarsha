@@ -19,7 +19,7 @@ export async function GET() {
   try {
     await connectToDB();
     const reports = await Garbage.find().sort({ createdAt: -1 });
-    return Response.json({ success: true, reports:reports[0] });
+    if(reports.length>0)  return Response.json({ success: true, reports:reports[0] });
   } catch (err) {
     return Response.json({ success: false, error: "Failed to fetch reports" }, { status: 500 });
   }
